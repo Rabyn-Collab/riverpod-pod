@@ -1,19 +1,25 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:pod/model/movie_state.dart';
 import 'package:pod/providers/movie_provider..dart';
 
 
 
 
 class TabBarWidget extends StatelessWidget {
-  const TabBarWidget({super.key});
+final Categories category;
 
+TabBarWidget(this.category);
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
+
     return Scaffold(
         body: Consumer(
           builder: (context, ref, child) {
-            final movieState = ref.watch(movieProvider);
+            final movieState = category == Categories.popular ? ref.watch(popularProvider): category == Categories.top_rated ?  ref.watch(topRatedProvider) : ref.watch(upcomingProvider);
              if(movieState.isLoad){
                return Center(child: CircularProgressIndicator());
              }else if(movieState.isError){
@@ -22,6 +28,7 @@ class TabBarWidget extends StatelessWidget {
                return Padding(
                  padding: const EdgeInsets.all(5.0),
                  child: GridView.builder(
+                   key: PageStorageKey(category.name),
                      itemCount: movieState.movies.length,
                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                          crossAxisCount: 3,
@@ -31,7 +38,16 @@ class TabBarWidget extends StatelessWidget {
                      ),
                      itemBuilder: (context, index){
                        final movie = movieState.movies[index];
-                       return Image.network('https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}');
+                       return CachedNetworkImage(
+                         placeholder: (c, s){
+                           return Center(
+                             child: SpinKitWave(
+                               color: Colors.pink,
+                               size: 25.0,
+                             ),
+                           );
+                         },
+                          imageUrl: 'https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}');
                      }
                  ),
                );

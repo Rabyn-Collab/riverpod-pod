@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:pod/model/movie_state.dart';
 import 'package:pod/view/widgets/tab_bar-Widgets.dart';
 
 
@@ -32,8 +34,8 @@ class HomePage extends StatelessWidget {
               unselectedLabelColor: Colors.white,
               tabs: [
                 Tab(text: 'Popular',),
-                Tab(text: 'UpComing',),
                 Tab(text: 'TopRated',),
+                Tab(text: 'UpComing',),
               ]
           ),
         ),
@@ -41,9 +43,9 @@ class HomePage extends StatelessWidget {
             physics: NeverScrollableScrollPhysics(),
 
               children: [
-               TabBarWidget(),
-               TabBarWidget(),
-               TabBarWidget(),
+               TabBarWidget(Categories.popular),
+               TabBarWidget(Categories.top_rated),
+               TabBarWidget(Categories.upcoming),
 
           ])
       ),
