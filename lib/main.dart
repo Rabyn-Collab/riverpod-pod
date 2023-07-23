@@ -5,19 +5,7 @@ import 'package:pod/view/home_page.dart';
 
 
 
-class Person{
-
-  void hello(){
-    print('hello user');
-  }
-
-  void sello(){
-   print('hello selllo');
-  }
-}
-
 void main (){
-  Person()..hello()..sello();
 
   runApp(
       ProviderScope(

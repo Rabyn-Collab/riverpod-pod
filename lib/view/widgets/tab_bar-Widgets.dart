@@ -3,8 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
+import 'package:pod/constants/token.dart';
 import 'package:pod/model/movie_state.dart';
 import 'package:pod/providers/movie_provider..dart';
+import 'package:pod/view/Detail_page.dart';
 
 
 
@@ -38,16 +41,21 @@ TabBarWidget(this.category);
                      ),
                      itemBuilder: (context, index){
                        final movie = movieState.movies[index];
-                       return CachedNetworkImage(
-                         placeholder: (c, s){
-                           return Center(
-                             child: SpinKitWave(
-                               color: Colors.pink,
-                               size: 25.0,
-                             ),
-                           );
+                       return InkWell(
+                         onTap: (){
+                           Get.to(() => DetailPage(movie: movie), transition: Transition.leftToRight);
                          },
-                          imageUrl: 'https://image.tmdb.org/t/p/w600_and_h900_bestv2${movie.poster_path}');
+                         child: CachedNetworkImage(
+                           placeholder: (c, s){
+                             return Center(
+                               child: SpinKitWave(
+                                 color: Colors.pink,
+                                 size: 25.0,
+                               ),
+                             );
+                           },
+                            imageUrl: '$videoUrl${movie.poster_path}'),
+                       );
                      }
                  ),
                );

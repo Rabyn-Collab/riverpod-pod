@@ -12,13 +12,21 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pod/api.dart';
 import 'package:pod/model/movie.dart';
+import 'package:pod/model/video.dart';
+
+import '../constants/token.dart';
+
+
+
+final videoProvider = FutureProvider.family((ref, int id) => MovieService.getMovieVideo(id));
+
 
 class MovieService{
 
   static final dio = Dio();
-
-
 
  static Future<Either<String, List<Movie>>> getMovieByCategory(String apiPath, int page) async{
      try{
@@ -28,7 +36,7 @@ class MovieService{
            },
            options: Options(
          headers: {
-           HttpHeaders.authorizationHeader: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyYTBmOTI2OTYxZDAwYzY2N2UxOTFhMjFjMTQ0NjFmOCIsInN1YiI6IjYwNDYxNTM0MzVhNjFlMDA1YjdjMmZmYiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.LvbdGQ5pvkEgSZY4JkNVIY3g-qF8PRygp7FnacsO1R0'
+           HttpHeaders.authorizationHeader: token
          },
 
        ));
@@ -40,6 +48,22 @@ class MovieService{
   }
 
 
+
+  static Future<List<Video>> getMovieVideo(int id) async{
+    try{
+      final response = await dio.get('${Api.baseUrl}/movie/$id/videos',
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: token
+            },
+
+          ));
+      final data = (response.data['results'] as List).map((e) => Video.fromJson(e)).toList();
+      return data;
+    } on DioException catch(err){
+      throw   err.response.toString();
+    }
+  }
 
 
 
