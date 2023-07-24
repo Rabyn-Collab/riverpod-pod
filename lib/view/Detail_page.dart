@@ -19,21 +19,17 @@ class DetailPage extends StatelessWidget {
             fit: BoxFit.fill,
             image: NetworkImage('$videoUrl${movie.backdrop_path}'))
       ),
-      child: ListView(
+      child: Column(
         children: [
          Consumer(
            builder: (context, ref, child) {
              final videoData = ref.watch(videoProvider(movie.id));
-             return  Container(
-               height: 300,
-               width: double.infinity,
-               child: videoData.when(
-                   data: (data){
-                     return PlayVideoFromNetwork(data[0].key);
-                   },
-                   error: (err, stack) => Center(child: Text('$err')),
-                   loading: () => Container()
-               ),
+             return  videoData.when(
+                 data: (data){
+                   return PlayVideoFromNetwork(data[0].key);
+                 },
+                 error: (err, stack) => Center(child: Text('$err')),
+                 loading: () => Container()
              );
            }
          )

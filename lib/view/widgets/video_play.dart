@@ -17,9 +17,9 @@ class _PlayVideoFromNetworkState extends State<PlayVideoFromNetwork> {
     controller = PodPlayerController(
         playVideoFrom: PlayVideoFrom.youtube('https://youtu.be/${widget.videoKey}'),
         podPlayerConfig: const PodPlayerConfig(
-            autoPlay: true,
-            isLooping: false,
-            videoQualityPriority: [1080, 720]
+            // autoPlay: true,
+            // isLooping: false,
+            // videoQualityPriority: [1080, 720]
         )
     )..initialise();
     super.initState();
@@ -33,10 +33,10 @@ class _PlayVideoFromNetworkState extends State<PlayVideoFromNetwork> {
 
   @override
   Widget build(BuildContext context) {
-    return  Center(
+    return  Container(
+      height: 300,
+      width: 300,
       child: PodVideoPlayer(
-        matchFrameAspectRatioToVideo: true,
-          matchVideoAspectRatioToFrame: true,
           controller: controller),
     );
   }
