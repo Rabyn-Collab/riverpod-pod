@@ -5,6 +5,7 @@ import 'package:flutter_offline/flutter_offline.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:pod/common_widgets/no_connection_page.dart';
 import 'package:pod/constants/token.dart';
 import 'package:pod/model/movie_state.dart';
 import 'package:pod/providers/movie_provider..dart';
@@ -32,8 +33,8 @@ TabBarWidget(this.category);
       }else{
         result= false;
       }
-     print(result);
-        return Consumer(
+
+        return result == false ? NoConnection(): Consumer(
             builder: (context, ref, child) {
               final movieState = category == Categories.popular ? ref.watch(
                   popularProvider) : category == Categories.top_rated ? ref

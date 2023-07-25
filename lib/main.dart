@@ -5,7 +5,9 @@ import 'package:pod/view/home_page.dart';
 
 
 
-void main (){
+void main () async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Future.delayed(Duration(milliseconds: 500));
 
 
   runApp(
