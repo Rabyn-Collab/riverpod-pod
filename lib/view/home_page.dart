@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get.dart';
 import 'package:pod/model/movie_state.dart';
+import 'package:pod/view/search_page.dart';
 import 'package:pod/view/widgets/tab_bar-Widgets.dart';
 
 
@@ -26,7 +28,9 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('TMDB MOVIE', style: TextStyle(color: Colors.pink, fontSize: 27),),
-                  IconButton(onPressed: (){}, icon: Icon(Icons.search))
+                  IconButton(onPressed: (){
+                    Get.to(() => SearchPage(), transition: Transition.leftToRight);
+                  }, icon: Icon(Icons.search))
                 ],
               ),
             ),

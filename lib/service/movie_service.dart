@@ -58,6 +58,7 @@ class MovieService{
             },
 
           ));
+      print(response.data['results']);
       final data = (response.data['results'] as List).map((e) => Video.fromJson(e)).toList();
       return data;
     } on DioException catch(err){
@@ -68,8 +69,24 @@ class MovieService{
 
 
 
+  static Future<Either<String, List<Movie>>> searchMovie(String searchText, String apiPath) async{
+    try{
+      final response = await dio.get(apiPath,
+          queryParameters: {
+            'query': searchText,
+          },
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: token
+            },
 
-
+          ));
+      final data = (response.data['results'] as List).map((e) => Movie.fromJson(e)).toList();
+      return Right(data);
+    } on DioException catch(err){
+      return Left(err.response.toString());
+    }
+  }
 
 
 

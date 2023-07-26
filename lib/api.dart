@@ -9,4 +9,5 @@ class Api{
   static const getPopular = '$baseUrl/movie/popular';
   static const getTopRated = '$baseUrl/movie/top_rated';
   static const getUpcoming = '$baseUrl/movie/upcoming';
+  static const getSearchMovie = '$baseUrl/search/movie';
 }

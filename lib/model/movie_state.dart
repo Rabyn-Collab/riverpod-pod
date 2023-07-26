@@ -41,6 +41,11 @@ class MovieState {
         isLoadMore=false,
         isError=false,apiPath=Api.getUpcoming, page=1, isLoad=false;
 
+  MovieState.searchState() : movies=[], isSuccess=false,errMessage='',
+        isLoadMore=false,
+        isError=false,apiPath=Api.getSearchMovie, page=1, isLoad=false;
+
+
 
   MovieState copyWith ({
     bool? isError,
