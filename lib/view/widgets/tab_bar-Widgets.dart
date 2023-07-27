@@ -83,6 +83,7 @@ TabBarWidget(this.category);
                                   transition: Transition.leftToRight);
                             },
                             child: CachedNetworkImage(
+
                                 placeholder: (c, s) {
                                   return Center(
                                     child: SpinKitWave(

@@ -33,11 +33,8 @@ class _PlayVideoFromNetworkState extends State<PlayVideoFromNetwork> {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      height: 300,
-      width: 300,
-      child: PodVideoPlayer(
-          controller: controller),
-    );
+    return  PodVideoPlayer(
+      videoAspectRatio: 16/9,
+        controller: controller);
   }
 }

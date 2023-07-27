@@ -22,6 +22,8 @@ import '../constants/token.dart';
 
 
 final videoProvider = FutureProvider.family((ref, int id) => MovieService.getMovieVideo(id));
+final recommendProvider = FutureProvider.family((ref, int id) => MovieService.getRecommendMovie(id));
+
 
 
 class MovieService{
@@ -81,12 +83,37 @@ class MovieService{
             },
 
           ));
+      if((response.data['results'] as List).isEmpty){
+        return Left('no-data found try using another keyword');
+      }else{
+        final data = (response.data['results'] as List).map((e) => Movie.fromJson(e)).toList();
+        return Right(data);
+      }
       final data = (response.data['results'] as List).map((e) => Movie.fromJson(e)).toList();
       return Right(data);
     } on DioException catch(err){
       return Left(err.response.toString());
     }
   }
+
+
+  static Future<List<Movie>> getRecommendMovie(int id) async{
+    try{
+      final response = await dio.get('${Api.baseUrl}/movie/$id/recommendations',
+          options: Options(
+            headers: {
+              HttpHeaders.authorizationHeader: token
+            },
+
+          ));
+      print(response.data['results']);
+      final data = (response.data['results'] as List).map((e) => Movie.fromJson(e)).toList();
+      return data;
+    } on DioException catch(err){
+      throw   err.response.toString();
+    }
+  }
+
 
 
 
