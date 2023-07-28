@@ -14,6 +14,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pod/api.dart';
+import 'package:pod/exception.dart';
 import 'package:pod/model/movie.dart';
 import 'package:pod/model/video.dart';
 
@@ -45,7 +46,8 @@ class MovieService{
        final data = (response.data['results'] as List).map((e) => Movie.fromJson(e)).toList();
       return Right(data);
      } on DioException catch(err){
-     return Left(err.response.toString());
+
+     return Left(DioExceptionError.fromDioError(err));
      }
   }
 

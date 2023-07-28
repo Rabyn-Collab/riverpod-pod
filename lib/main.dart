@@ -9,6 +9,12 @@ void main () async{
   WidgetsFlutterBinding.ensureInitialized();
   await Future.delayed(Duration(milliseconds: 500));
 
+// final numbers = ['l', 'io','lio', null, 'op'];
+//
+// numbers.forEach((element) {
+//     print(element?.toUpperCase());
+// });
+
 
   runApp(
       ProviderScope(
