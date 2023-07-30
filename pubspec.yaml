@@ -41,29 +41,32 @@ dependencies:
   dartz: ^0.10.1
   flutter_spinkit: ^5.2.0
   cached_network_image: ^3.2.3
-  pod_player: ^0.2.0
   flutter_offline: ^3.0.0
   lottie: ^2.5.0
   flutter_native_splash: ^2.3.1
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 flutter_native_splash:
   color: "#121212"
-  image: assets/images/movie.png
+  image: assets/images/shop.png
   icon_background_color: "#ffffff"
 
   android_12:
-    image: assets/images/movie.png
+    image: assets/images/shop.png
     icon_background_color: "#121212"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
+  hive_generator: ^2.0.0
+  build_runner: ^2.4.6
 
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/movie.png"
+  image_path: "assets/images/shop.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
 
 
@@ -90,6 +93,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/fonts/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -102,12 +106,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: RaleWay
+      fonts:
+        - asset: assets/fonts/Raleway-Regular.ttf
+
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
