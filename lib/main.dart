@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:pod/model/user.dart';
+import 'package:pod/view/auth/login_page.dart';
 import 'package:pod/view/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -38,10 +39,11 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark().copyWith(
-          textTheme: Typography().black.apply(fontFamily: 'RaleWay')
+        theme: ThemeData.dark(
+        ).copyWith(
+          textTheme: Typography().black.apply(fontFamily: 'RaleWay'),
         ),
-        home: HomePage(),
+        home: LoginPage(),
     );
   }
 }
