@@ -5,5 +5,5 @@
 
 class Api{
 
-  static const baseUrl = 'https://api.themoviedb.org/3';
+  static const baseUrl = 'http://192.168.0.125:5000';
 }

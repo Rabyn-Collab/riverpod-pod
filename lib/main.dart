@@ -41,9 +41,9 @@ class Home extends StatelessWidget {
       debugShowCheckedModeBanner: false,
         theme: ThemeData.dark(
         ).copyWith(
-          textTheme: Typography().black.apply(fontFamily: 'RaleWay'),
+          textTheme: Typography().white.apply(fontFamily: 'RaleWay'),
         ),
-        home: LoginPage(),
+        home: HomePage(),
     );
   }
 }

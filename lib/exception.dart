@@ -21,7 +21,7 @@ class DioExceptionError  {
 
       case DioExceptionType.unknown:
 
-        return 'No Internet.';
+        return 'Something went wrong';
 
 
       default:
