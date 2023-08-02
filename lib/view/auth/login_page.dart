@@ -1,23 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:pod/common_widgets/snack_widget.dart';
 import 'package:pod/constants/colors.dart';
 import 'package:pod/constants/gap.dart';
+import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/mode.dart';
 import 'package:pod/view/auth/register_page.dart';
 
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerStatefulWidget {
 
 
+  @override
+  ConsumerState<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
   final mailController = TextEditingController();
+
   final passController = TextEditingController();
 
   final _form = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
+    ref.listen(authProvider, (previous, next) {
+      if(next.isError){
+        CommonSnack.errrorSnack(context, next.errText);
+      }else if(next.isSuccess){
+        CommonSnack.successSnack(context, 'successfully login');
+      }
+    });
+    final auth = ref.watch(authProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Login Page'),
@@ -82,14 +97,19 @@ class LoginPage extends StatelessWidget {
                     Sizes.gapH20,
                     Sizes.gapH20,
                     ElevatedButton(
-                        onPressed: () {
+                        onPressed:auth.isLoad ? null: () {
+                          FocusScope.of(context).unfocus();
                           _form.currentState!.save();
                           if (_form.currentState!.validate()) {
+                            ref.read(authProvider.notifier).userLogin(
+                                email: mailController.text.trim(),
+                                password: passController.text.trim()
+                            );
                           } else {
                             ref.read(modeProvider.notifier).changeMode();
 
                           }
-                        }, child: Text('Login')
+                        }, child: auth.isLoad ? Center(child: CircularProgressIndicator()) : Text('Login')
                     ),
                     Sizes.gapH10,
                     Row(

@@ -16,7 +16,12 @@ class ProductService {
 
   static Future<List<Product>> get getAllProducts async {
     try {
-      final response = await dio.get(Api.baseUrl);
+      final response = await dio.get(Api.baseUrl, options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      ));
       return (response.data as List).map((e) => Product.fromJson(e)).toList();
     } on DioException catch (err) {
       print(err);
