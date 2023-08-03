@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:pod/model/user.dart';
-import 'package:pod/view/auth/login_page.dart';
-import 'package:pod/view/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pod/view/status_page.dart';
 
 final box = Provider<User?>((ref) => null);
 
@@ -43,7 +42,7 @@ class Home extends StatelessWidget {
         ).copyWith(
           textTheme: Typography().white.apply(fontFamily: 'RaleWay'),
         ),
-        home: LoginPage(),
+        home: StatusPage(),
     );
   }
 }

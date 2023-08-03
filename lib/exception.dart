@@ -17,7 +17,13 @@ class DioExceptionError  {
         return 'Request send timeout.';
 
       case DioExceptionType.badResponse:
+        print(dioError.response);
+        if(dioError.response?.statusCode == 404){
+         return dioError.response!.data['message'] ;
+        }else{
           return _handleStatusCode(dioError.response?.statusCode);
+        }
+
 
       case DioExceptionType.unknown:
 

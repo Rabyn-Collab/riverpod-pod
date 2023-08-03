@@ -20,6 +20,7 @@ mixin _$CommonState {
   bool get isLoad => throw _privateConstructorUsedError;
   bool get isSuccess => throw _privateConstructorUsedError;
   bool get isError => throw _privateConstructorUsedError;
+  User? get user => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CommonStateCopyWith<CommonState> get copyWith =>
@@ -32,7 +33,8 @@ abstract class $CommonStateCopyWith<$Res> {
           CommonState value, $Res Function(CommonState) then) =
       _$CommonStateCopyWithImpl<$Res, CommonState>;
   @useResult
-  $Res call({String errText, bool isLoad, bool isSuccess, bool isError});
+  $Res call(
+      {String errText, bool isLoad, bool isSuccess, bool isError, User? user});
 }
 
 /// @nodoc
@@ -52,6 +54,7 @@ class _$CommonStateCopyWithImpl<$Res, $Val extends CommonState>
     Object? isLoad = null,
     Object? isSuccess = null,
     Object? isError = null,
+    Object? user = freezed,
   }) {
     return _then(_value.copyWith(
       errText: null == errText
@@ -70,6 +73,10 @@ class _$CommonStateCopyWithImpl<$Res, $Val extends CommonState>
           ? _value.isError
           : isError // ignore: cast_nullable_to_non_nullable
               as bool,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
     ) as $Val);
   }
 }
@@ -82,7 +89,8 @@ abstract class _$$_CommonStateCopyWith<$Res>
       __$$_CommonStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String errText, bool isLoad, bool isSuccess, bool isError});
+  $Res call(
+      {String errText, bool isLoad, bool isSuccess, bool isError, User? user});
 }
 
 /// @nodoc
@@ -100,6 +108,7 @@ class __$$_CommonStateCopyWithImpl<$Res>
     Object? isLoad = null,
     Object? isSuccess = null,
     Object? isError = null,
+    Object? user = freezed,
   }) {
     return _then(_$_CommonState(
       errText: null == errText
@@ -118,6 +127,10 @@ class __$$_CommonStateCopyWithImpl<$Res>
           ? _value.isError
           : isError // ignore: cast_nullable_to_non_nullable
               as bool,
+      user: freezed == user
+          ? _value.user
+          : user // ignore: cast_nullable_to_non_nullable
+              as User?,
     ));
   }
 }
@@ -129,7 +142,8 @@ class _$_CommonState implements _CommonState {
       {required this.errText,
       required this.isLoad,
       required this.isSuccess,
-      required this.isError});
+      required this.isError,
+      required this.user});
 
   @override
   final String errText;
@@ -139,10 +153,12 @@ class _$_CommonState implements _CommonState {
   final bool isSuccess;
   @override
   final bool isError;
+  @override
+  final User? user;
 
   @override
   String toString() {
-    return 'CommonState(errText: $errText, isLoad: $isLoad, isSuccess: $isSuccess, isError: $isError)';
+    return 'CommonState(errText: $errText, isLoad: $isLoad, isSuccess: $isSuccess, isError: $isError, user: $user)';
   }
 
   @override
@@ -154,12 +170,13 @@ class _$_CommonState implements _CommonState {
             (identical(other.isLoad, isLoad) || other.isLoad == isLoad) &&
             (identical(other.isSuccess, isSuccess) ||
                 other.isSuccess == isSuccess) &&
-            (identical(other.isError, isError) || other.isError == isError));
+            (identical(other.isError, isError) || other.isError == isError) &&
+            (identical(other.user, user) || other.user == user));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, errText, isLoad, isSuccess, isError);
+      Object.hash(runtimeType, errText, isLoad, isSuccess, isError, user);
 
   @JsonKey(ignore: true)
   @override
@@ -173,7 +190,8 @@ abstract class _CommonState implements CommonState {
       {required final String errText,
       required final bool isLoad,
       required final bool isSuccess,
-      required final bool isError}) = _$_CommonState;
+      required final bool isError,
+      required final User? user}) = _$_CommonState;
 
   @override
   String get errText;
@@ -183,6 +201,8 @@ abstract class _CommonState implements CommonState {
   bool get isSuccess;
   @override
   bool get isError;
+  @override
+  User? get user;
   @override
   @JsonKey(ignore: true)
   _$$_CommonStateCopyWith<_$_CommonState> get copyWith =>

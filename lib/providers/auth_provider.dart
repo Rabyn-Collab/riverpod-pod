@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
+import 'package:pod/main.dart';
 import 'package:pod/model/common_state.dart';
 import 'package:pod/service/auth_service.dart';
 
 
 
 
-final authProvider = StateNotifierProvider<AuthProvider, CommonState>((ref) => AuthProvider(CommonState.empty()));
+final authProvider = StateNotifierProvider<AuthProvider, CommonState>((ref) => AuthProvider(CommonState(
+    errText: '', isLoad: false, isSuccess: false, isError: false, user: ref.watch(box))));
 
 
 class AuthProvider extends StateNotifier<CommonState>{
@@ -23,10 +26,15 @@ class AuthProvider extends StateNotifier<CommonState>{
              state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
              },
              (r) {
-              state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r);
+              state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: true,user: r);
              }
      );
 
    }
+
+  void userLogOut(){
+     Hive.box<String?>('user').clear();
+     state = state.copyWith(user: null);
+  }
 
 }
