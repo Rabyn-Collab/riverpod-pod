@@ -13,7 +13,6 @@ class StatusPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final authData = ref.watch(authProvider);
-    print(authData.user);
     return  authData.user == null ? LoginPage(): HomePage();
   }
 }

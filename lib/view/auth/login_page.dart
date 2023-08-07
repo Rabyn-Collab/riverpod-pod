@@ -27,9 +27,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   Widget build(BuildContext context) {
     ref.listen(authProvider, (previous, next) {
       if(next.isError){
-        CommonSnack.errrorSnack(context, next.errText);
+        CommonSnack.errrorSnack(context: context,msg:  next.errText);
       }else if(next.isSuccess){
-        CommonSnack.successSnack(context, 'successfully login');
+        CommonSnack.successSnack(context: context,msg:  'successfully login');
       }
     });
     final auth = ref.watch(authProvider);
