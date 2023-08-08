@@ -21,7 +21,7 @@ await Hive.openBox<String?>('user');
 final cartBox = await Hive.openBox<CartItem>('carts');
 final user = Hive.box<String?>('user');
 final userData  = user.get('userInfo');
-print(cartBox.values);
+
 
   runApp(
       ProviderScope(

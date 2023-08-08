@@ -29,5 +29,16 @@ class CartItem extends HiveObject{
 });
 
 
+  @override
+  String toString() {
+    return 'CartItem('
+        'product: ${this.product}, '
+        'name: ${this.name}'
+        'image: ${this.image}'
+        'price: ${this.price}'
+        'qty: ${this.qty}'
+        ')';
+  }
+
 }
 

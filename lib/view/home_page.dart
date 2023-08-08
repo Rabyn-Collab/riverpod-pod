@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:pod/api.dart';
 import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/cart_provider.dart';
 import 'package:pod/service/product_service.dart';
+import 'package:pod/view/cart_page.dart';
+import 'package:pod/view/detail_page.dart';
 
 
 
@@ -24,7 +27,9 @@ class HomePage extends StatelessWidget {
         return Scaffold(
             appBar: AppBar(
               actions: [
-                IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart))
+                IconButton(onPressed: (){
+                  Get.to(() => CartPage());
+                }, icon: Icon(Icons.shopping_cart))
               ],
             ),
             drawer: Drawer(
@@ -54,19 +59,27 @@ class HomePage extends StatelessWidget {
                           ),
                           itemBuilder: (context, index){
                             final product = data[index];
-                            return GridTile(
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.fill,
-                                  imageUrl:  '${Api.baseUrl}${product.product_image}'),
-                              footer: Container(
-                                color: Colors.black.withOpacity(0.7),
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(child: Text(product.product_name)),
-                                    Text('Rs.${product.product_price}')
-                                  ],
+                            return InkWell(
+                              onTap: (){
+                                Get.to(() => DetailPage(product: product));
+                              },
+                              child: GridTile(
+                                  child: Hero(
+                                    tag: product.id,
+                                    child: CachedNetworkImage(
+                                      fit: BoxFit.fill,
+                                      imageUrl:  '${Api.baseUrl}${product.product_image}'),
+                                  ),
+                                footer: Container(
+                                  color: Colors.black.withOpacity(0.7),
+                                  height: 40,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(child: Text(product.product_name)),
+                                      Text('Rs.${product.product_price}')
+                                    ],
+                                  ),
                                 ),
                               ),
                             );

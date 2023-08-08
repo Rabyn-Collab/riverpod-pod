@@ -32,6 +32,30 @@ class AuthProvider extends StateNotifier<CommonState>{
 
    }
 
+
+
+
+   Future<void> userSignUp({
+    required String email,
+    required String password,
+    required String fullname
+  }) async {
+    state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
+    final response = await AuthService.userSignUp(email: email, password: password, fullname: fullname);
+    response.fold(
+            (l) {
+          state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
+        },
+            (r) {
+          state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r,);
+        }
+    );
+  }
+
+
+
+
+
   void userLogOut(){
      Hive.box<String?>('user').clear();
      state = state.copyWith(user: null);

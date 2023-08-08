@@ -44,4 +44,30 @@ class AuthService{
   }
 
 
+
+  static Future<Either<String, bool>> userSignUp({
+    required String email,
+    required String password,
+    required String fullname
+  }) async {
+    try {
+      final response = await dio.post(Api.userSignUp,
+          data: {
+            'email': email,
+            'password': password,
+            'fullname': fullname
+          },
+          options: Options(
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              }
+          ));
+      return Right(true);
+    } on DioException catch (err) {
+      print(err);
+      return Left(DioExceptionError.fromDioError(err));
+    }
+  }
+
 }

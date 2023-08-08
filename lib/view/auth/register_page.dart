@@ -1,23 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:pod/common_widgets/snack_widget.dart';
 import 'package:pod/constants/colors.dart';
 import 'package:pod/constants/gap.dart';
+import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/mode.dart';
 
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends ConsumerStatefulWidget {
 
 
+  @override
+  ConsumerState<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends ConsumerState<SignUpPage> {
   final mailController = TextEditingController();
+
   final nameController = TextEditingController();
+
   final passController = TextEditingController();
 
   final _form = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
+    ref.listen(authProvider, (previous, next) {
+      if(next.isError){
+        CommonSnack.errrorSnack(context: context,msg:  next.errText);
+      }else if(next.isSuccess){
+        CommonSnack.successSnack(context: context,msg:  'successfully register');
+        Get.back();
+      }
+    });
+    final auth = ref.watch(authProvider);
     return Scaffold(
         appBar: AppBar(
           title: Text('SignUp Page'),
@@ -105,14 +122,20 @@ class SignUpPage extends StatelessWidget {
                       Sizes.gapH20,
                       Sizes.gapH20,
                       ElevatedButton(
-                          onPressed: () {
+                          onPressed:auth.isLoad ? null: () {
+                            FocusScope.of(context).unfocus();
                             _form.currentState!.save();
                             if (_form.currentState!.validate()) {
+                              ref.read(authProvider.notifier).userSignUp(
+                                  email: mailController.text.trim(),
+                                  password: passController.text.trim(),
+                                  fullname: nameController.text.trim()
+                              );
                             } else {
                               ref.read(modeProvider.notifier).changeMode();
 
                             }
-                          }, child: Text('SignUp')
+                          }, child:  auth.isLoad ? Center(child: CircularProgressIndicator()) :Text('SignUp')
                       ),
                       Sizes.gapH10,
                       Row(
