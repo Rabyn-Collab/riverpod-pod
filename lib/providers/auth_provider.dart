@@ -59,7 +59,7 @@ class AuthProvider extends StateNotifier<CommonState>{
 
   void userLogOut(){
      Hive.box<String?>('user').clear();
-     Hive.box<CartItem>('carts').clear();
+
      state = state.copyWith(user: null);
   }
 

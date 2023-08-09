@@ -38,6 +38,7 @@ class HomePage extends StatelessWidget {
                   ListTile(
                     onTap: () {
                        ref.read(authProvider.notifier).userLogOut();
+                       ref.read(cartProvider.notifier).clearCart();
                     },
                     leading: Icon(Icons.exit_to_app, color: Colors.white,),
                     title: Text('User Log Out'),
