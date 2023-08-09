@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:pod/main.dart';
+import 'package:pod/model/cart_item.dart';
 import 'package:pod/model/common_state.dart';
 import 'package:pod/service/auth_service.dart';
 
@@ -58,6 +59,7 @@ class AuthProvider extends StateNotifier<CommonState>{
 
   void userLogOut(){
      Hive.box<String?>('user').clear();
+     Hive.box<CartItem>('carts').clear();
      state = state.copyWith(user: null);
   }
 

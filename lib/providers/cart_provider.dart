@@ -49,15 +49,35 @@ class CartProvider extends StateNotifier<List<CartItem>>{
   }
 
 
-  void singleAdd(){
-
+  void singleAdd(CartItem cartItem){
+    cartItem.qty = cartItem.qty + 1;
+    cartItem.save();
+    state = [
+      for(final c in state) c.product == cartItem.product ? cartItem : c
+    ];
   }
-  void singleRemove(){
-
+  void singleRemove(CartItem cartItem){
+   if(cartItem.qty > 1){
+     cartItem.qty = cartItem.qty - 1;
+     cartItem.save();
+     state = [
+       for(final c in state) c.product == cartItem.product ? cartItem : c
+     ];
+   }
   }
 
-  void removeFromCart(){
+  void removeFromCart(CartItem cartItem){
+    cartItem.delete();
+   state.remove(cartItem);
+   state = [...state];
+  }
 
+  int get totalAmount{
+    int total = 0;
+    state.forEach((element) {
+       total += element.qty * element.price;
+    });
+    return total;
   }
 
 
