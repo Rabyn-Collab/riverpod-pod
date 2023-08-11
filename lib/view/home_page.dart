@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:pod/api.dart';
+import 'package:pod/constants/gap.dart';
 import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/cart_provider.dart';
 import 'package:pod/service/product_service.dart';
 import 'package:pod/view/cart_page.dart';
 import 'package:pod/view/detail_page.dart';
+import 'package:pod/view/product_list.dart';
 
 
 
@@ -24,6 +26,7 @@ class HomePage extends StatelessWidget {
     return Consumer(
       builder: (context, ref, child) {
         final productData = ref.watch(productProvider);
+        final authData = ref.watch(authProvider);
         return Scaffold(
             appBar: AppBar(
               actions: [
@@ -35,6 +38,35 @@ class HomePage extends StatelessWidget {
             drawer: Drawer(
               child: ListView(
                 children: [
+                  DrawerHeader(
+                      child: Padding(
+                        padding: const EdgeInsets.all(7.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                        CircleAvatar(
+                          radius: 25,
+                          child: Text(authData.user!.fullname.substring(0,1).toUpperCase()),
+                        ),
+                      Sizes.gapH10,
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(Icons.mail),
+                        title: Text(authData.user!.email),
+                      )
+                    ],
+                  ),
+                      )),
+
+                  if(authData.user!.isAdmin) ListTile(
+                    onTap: () {
+                      Get.back();
+                        Get.to(() => ProductList(), transition: Transition.leftToRight);
+
+                    },
+                    leading: Icon(Icons.account_balance_wallet, color: Colors.white,),
+                    title: Text('Product List'),
+                  ),
                   ListTile(
                     onTap: () {
                        ref.read(authProvider.notifier).userLogOut();
@@ -42,7 +74,9 @@ class HomePage extends StatelessWidget {
                     },
                     leading: Icon(Icons.exit_to_app, color: Colors.white,),
                     title: Text('User Log Out'),
-                  )
+                  ),
+
+
                 ],
               ),
             ),

@@ -9,4 +9,5 @@ class Api{
   static const userLogin = '$baseUrl/api/userLogin';
   static const userSignUp = '$baseUrl/api/userSignUp';
   static const userUpdate = '$baseUrl/api/userUpdate';
+  static const addProduct = '$baseUrl/api/add/product';
 }
