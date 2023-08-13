@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -6,7 +8,26 @@ import 'package:pod/constants/colors.dart';
 import 'package:pod/constants/gap.dart';
 import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/mode.dart';
+import 'package:pod/providers/product_provider.dart';
+import 'package:pod/service/product_service.dart';
 
+
+final items = [
+  'Nike',
+  'Addidas',
+  'Sunsilk',
+  'Smiley',
+  'Levis',
+];
+
+
+final items1 = [
+  'Sports',
+  'Beauty',
+  'Fashion',
+  'Tech',
+  'Food',
+];
 
 class AddPage extends ConsumerStatefulWidget {
 
@@ -18,23 +39,30 @@ class AddPage extends ConsumerStatefulWidget {
 class _AddPageState extends ConsumerState<AddPage> {
 
 
-  final mailController = TextEditingController();
+  final detailController = TextEditingController();
   final nameController = TextEditingController();
-  final passController = TextEditingController();
-
+  final priceController = TextEditingController();
+  final stockController = TextEditingController();
 
   final _form = GlobalKey<FormState>();
 
+
+  String brand = items[0];
+  String category = items1[0];
+
   @override
   Widget build(BuildContext context) {
-    ref.listen(authProvider, (previous, next) {
+    ref.listen(crudProvider, (previous, next) {
       if(next.isError){
         CommonSnack.errrorSnack(context: context,msg:  next.errText);
       }else if(next.isSuccess){
+        ref.invalidate(productProvider);
         CommonSnack.successSnack(context: context,msg:  'successfully register');
         Get.back();
       }
     });
+    final crud = ref.watch(crudProvider);
+    final image = ref.watch(imageProvider);
     final auth = ref.watch(authProvider);
     return Scaffold(
         appBar: AppBar(
@@ -51,7 +79,7 @@ class _AddPageState extends ConsumerState<AddPage> {
                   child: ListView(
 
                     children: [
-                      const SizedBox(height: 50,),
+                      const SizedBox(height: 10,),
                       TextFormField(
                         controller: nameController,
                         textInputAction: TextInputAction.next,
@@ -67,7 +95,7 @@ class _AddPageState extends ConsumerState<AddPage> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: 'Full Name',
+                            hintText: 'product_name',
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 15),
                             prefixIcon: Icon(Icons.lock),
@@ -77,66 +105,153 @@ class _AddPageState extends ConsumerState<AddPage> {
                       Sizes.gapH16,
                       TextFormField(
                         style: TextStyle(color: Colours.whiteColor),
-                        controller: mailController,
+                        controller: detailController,
                         textInputAction: TextInputAction.next,
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'please provide email';
-                          } else if (!RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                              .hasMatch(val)) {
-                            return 'please provide valid email';
+                            return 'please provide detail';
                           }
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: 'email',
+                            hintText: 'product_detail',
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 15),
-                            prefixIcon: Icon(Icons.email),
+                            prefixIcon: Icon(Icons.details),
                             errorStyle: TextStyle(color: Colors.amber)
                         ),
                       ),
                       Sizes.gapH16,
                       TextFormField(
-                        obscureText: true,
-                        controller: passController,
+                        controller: priceController,
+                        keyboardType: TextInputType.number,
                         style: TextStyle(color: Colours.whiteColor),
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'please provide password';
-                          } else if (val.length < 5) {
-                            return 'must be greater than 5';
-                          } else if (val.length > 20) {
-                            return 'must be less than 20';
+                            return 'please provide price';
                           }
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: 'password',
+                            hintText: 'product_price',
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 15),
-                            prefixIcon: Icon(Icons.lock),
+                            prefixIcon: Icon(Icons.monetization_on),
                             errorStyle: TextStyle(color: Colors.amber)
                         ),
                       ),
+                      Sizes.gapH16,
+                      TextFormField(
+                        controller: stockController,
+                        keyboardType: TextInputType.number,
+                        style: TextStyle(color: Colours.whiteColor),
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'please provide stockCount';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                            hintText: 'stock',
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 15),
+                            prefixIcon: Icon(Icons.map),
+                            errorStyle: TextStyle(color: Colors.amber)
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: DropdownButton(
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          value: brand,
+                          isExpanded: true,
+                          items: items.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(items),
+                            );
+                          }).toList(),
+                         onChanged: (o){
+                            setState(() {
+                              brand = o as String;
+                            });
+                         },
+
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: DropdownButton(
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          value: category,
+                          isExpanded: true,
+                          items: items1.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(items),
+                            );
+                          }).toList(),
+                          onChanged: (o){
+                            setState(() {
+                              category = o as String;
+                            });
+                          },
+
+                        ),
+                      ),
                       Sizes.gapH20,
+                      InkWell(
+                        onTap: (){
+                          Get.defaultDialog(
+                            title: 'please select an option',
+                            actions: [
+                              TextButton(onPressed: (){
+                                Get.back();
+                                ref.read(imageProvider.notifier).pickAnImage(false);
+                              }, child: Text('Gallery')),
+                              TextButton(onPressed: (){
+                                Get.back();
+                                ref.read(imageProvider.notifier).pickAnImage(true);
+                              }, child: Text('Camera')),
+                            ]
+                          );
+                        },
+                        child: Container(
+                          height: 100,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white)
+                          ),
+                          child: image == null ? Center(child: Text('Please select an image')): Image.file(File(image.path)),
+
+                        ),
+                      ),
                       Sizes.gapH20,
                       ElevatedButton(
-                          onPressed:auth.isLoad ? null: () {
+                          onPressed:crud.isLoad ? null: () {
                             FocusScope.of(context).unfocus();
                             _form.currentState!.save();
                             if (_form.currentState!.validate()) {
-                              ref.read(authProvider.notifier).userSignUp(
-                                  email: mailController.text.trim(),
-                                  password: passController.text.trim(),
-                                  fullname: nameController.text.trim()
-                              );
+                              if(image == null){
+
+                              }else{
+                                ref.read(crudProvider.notifier).addProduct(
+                                    product_name: nameController.text.trim(),
+                                    product_detail: detailController.text.trim(),
+                                    product_price: int.parse(priceController.text.trim()),
+                                    product_image: image,
+                                    brand: brand,
+                                    category: category,
+                                    countInStock: int.parse(stockController.text.trim()),
+                                    token: auth.user!.token
+                                );
+                              }
+
                             } else {
                               ref.read(modeProvider.notifier).changeMode();
 
                             }
-                          }, child:  auth.isLoad ? Center(child: CircularProgressIndicator()) :Text('Submit')
+                          }, child:  crud.isLoad ? Center(child: CircularProgressIndicator()) :Text('Submit')
                       ),
 
                     ],

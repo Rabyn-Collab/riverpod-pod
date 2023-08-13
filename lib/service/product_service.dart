@@ -68,7 +68,98 @@ class ProductService {
 
 
 
+  static Future<Either<String, bool>>  updateProduct ({
+    required String product_name,
+    required String product_detail,
+    required int   product_price,
+    required String brand,
+    required String category,
+    required int countInStock,
+    required String token,
+    required String productId,
+    XFile? product_image,
+    String? oldImage,
+  })async {
+    try {
+      if(product_image == null){
 
+        final response = await dio.patch('${Api.productUpdate}/$productId', data: {
+          'product_name': product_name,
+          'product_detail': product_detail,
+          'product_price': product_price,
+          'brand': brand,
+          'category' : category,
+          'countInStock': countInStock,
+        },
+            options: Options(
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  HttpHeaders.authorizationHeader: token,
+                }
+            ));
+        return Right(true);
+      }else{
+        final formData = FormData.fromMap({
+          'product_name': product_name,
+          'product_detail': product_detail,
+          'product_price': product_price,
+          'brand': brand,
+          'category' : category,
+          'countInStock': countInStock,
+          'product_image':  await MultipartFile.fromFile(product_image.path, filename: product_image.name),
+
+        });
+        final response = await dio.patch('${Api.productUpdate}/$productId',
+            data: formData,
+            queryParameters: {
+            'oldImage': oldImage
+            },
+            options: Options(
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              HttpHeaders.authorizationHeader: token,
+            }
+        ));
+        return Right(true);
+      }
+
+
+    } on DioException catch (err) {
+      return Left(DioExceptionError.fromDioError(err));
+    }
+  }
+
+
+
+
+
+  static Future<Either<String, bool>>  removeProduct ({
+    required String token,
+    required String productId,
+   required String oldImage,
+  })async {
+    try {
+
+        final response = await dio.delete('${Api.productRemove}$productId',
+            queryParameters: {
+              'oldImage': oldImage
+            },
+            options: Options(
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  HttpHeaders.authorizationHeader: token,
+                }
+            ));
+        return Right(true);
+
+
+    } on DioException catch (err) {
+      return Left(DioExceptionError.fromDioError(err));
+    }
+  }
 
 
 

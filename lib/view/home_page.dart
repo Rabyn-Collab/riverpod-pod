@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
         return Scaffold(
             appBar: AppBar(
               actions: [
-                IconButton(onPressed: (){
+               if(!authData.user!.isAdmin) IconButton(onPressed: (){
                   Get.to(() => CartPage());
                 }, icon: Icon(Icons.shopping_cart))
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 
 
@@ -14,6 +15,25 @@ class ModeProvider extends StateNotifier<AutovalidateMode>{
     void changeMode(){
         state = AutovalidateMode.onUserInteraction;
     }
+
+
+}
+
+
+final imageProvider = StateNotifierProvider.autoDispose<ImageProvider, XFile?>((ref) => ImageProvider(null));
+
+
+class ImageProvider extends StateNotifier<XFile?>{
+  ImageProvider(super.state);
+
+  Future<void> pickAnImage(bool isCamera) async{
+    final ImagePicker picker = ImagePicker();
+     if(isCamera){
+         state = await picker.pickImage(source: ImageSource.camera);
+     }else{
+       state = await picker.pickImage(source: ImageSource.gallery);
+     }
+  }
 
 
 }

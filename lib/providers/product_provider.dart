@@ -6,7 +6,7 @@ import 'package:pod/service/product_service.dart';
 
 
 
-final productProvider = StateNotifierProvider<ProductProvider, CommonState>((ref) => ProductProvider(CommonState(
+final crudProvider = StateNotifierProvider<ProductProvider, CommonState>((ref) => ProductProvider(CommonState(
     errText: '', isLoad: false, isSuccess: false, isError: false, user: null)));
 
 
@@ -41,6 +41,52 @@ class ProductProvider extends StateNotifier<CommonState>{
 
   }
 
+
+
+  Future<void>  updateProduct ({
+    required String product_name,
+    required String product_detail,
+    required int   product_price,
+    required String brand,
+    required String category,
+    required int countInStock,
+    required String token,
+    required String productId,
+    XFile? product_image,
+    String? oldImage,
+  })async {
+    state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
+    final response = await ProductService.updateProduct(
+        product_name: product_name, product_detail: product_detail,
+        product_price: product_price, brand: brand, category: category,
+        countInStock: countInStock, token: token, productId: productId);
+    response.fold(
+            (l) {
+          state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
+        },
+            (r) {
+          state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r,);
+        }
+    );
+  }
+
+
+   Future<void>  removeProduct ({
+    required String token,
+    required String productId,
+    required String oldImage,
+  })async {
+    state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
+    final response = await ProductService.removeProduct(token: token, productId: productId, oldImage: oldImage);
+    response.fold(
+            (l) {
+          state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
+        },
+            (r) {
+          state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r,);
+        }
+    );
+  }
 
 
 

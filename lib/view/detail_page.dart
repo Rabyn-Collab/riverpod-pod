@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pod/api.dart';
 import 'package:pod/model/product.dart';
+import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/cart_provider.dart';
 
 
@@ -47,10 +48,11 @@ class DetailPage extends StatelessWidget {
                  )),
               Consumer(
                 builder: (context, ref, child){
+                  final auth = ref.watch(authProvider);
 
                  return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                    child: ElevatedButton(onPressed: (){
+                    child: ElevatedButton(onPressed: auth.user!.isAdmin ? null: (){
                       ref.read(cartProvider.notifier).addToCart(product, context);
                     }, child: Text('Add To Cart')),
                   );
