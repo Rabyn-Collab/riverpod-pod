@@ -59,7 +59,7 @@ class ProductProvider extends StateNotifier<CommonState>{
     final response = await ProductService.updateProduct(
         product_name: product_name, product_detail: product_detail,
         product_price: product_price, brand: brand, category: category,
-        countInStock: countInStock, token: token, productId: productId);
+        countInStock: countInStock, token: token, productId: productId, oldImage: oldImage, product_image: product_image);
     response.fold(
             (l) {
           state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
