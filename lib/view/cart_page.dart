@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:pod/api.dart';
+import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/cart_provider.dart';
+import 'package:pod/view/auth/shipping_form.dart';
+import 'package:pod/view/place_order.dart';
 
 
 class CartPage extends StatelessWidget {
@@ -14,6 +18,7 @@ class CartPage extends StatelessWidget {
         body: Consumer(
             builder: (context, ref, child) {
               final cartData = ref.watch(cartProvider);
+              final auth = ref.watch(authProvider);
               final totalAmount = ref.watch(cartProvider.notifier).totalAmount;
               return cartData.isEmpty ? Center(child: Text('Add Some Product to Cart')): Column(
                 children: [
@@ -79,7 +84,14 @@ class CartPage extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 10,),
-                        ElevatedButton(onPressed: (){}, child: Text('Check Out'))
+                        ElevatedButton(onPressed: (){
+                          if(auth.user!.shipping.isEmpty){
+                             Get.to(()=> ShippingForm(), transition:  Transition.leftToRight);
+                          }else{
+
+                            Get.to(()=> PlaceOrder(carts: cartData, total: totalAmount), transition:  Transition.leftToRight);
+                          }
+                        }, child: Text('Check Out'))
                       ],
                     ),
                   )

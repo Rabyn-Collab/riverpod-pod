@@ -70,4 +70,31 @@ class AuthService{
     }
   }
 
+
+
+  static Future<Either<String, User>> userUpdate({
+    required  Map<String, dynamic> shippingAddress,
+    required String token
+  }) async {
+    try {
+      final response = await dio.patch(Api.userUpdate,
+          data: {
+            'shippingAddress': shippingAddress,
+          },
+          options: Options(
+              headers: {
+                'Authorization': token
+              }
+          ));
+      final user = Hive.box<String?>('user');
+      user.put('userInfo', jsonEncode(response.data['data']));
+      return Right(User.fromJson(response.data['data']));
+    } on DioException catch (err) {
+      print(err);
+      return Left(DioExceptionError.fromDioError(err));
+    }
+  }
+
+
+
 }

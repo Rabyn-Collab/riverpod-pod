@@ -19,6 +19,8 @@ class Shipping{
          city: json['city']
      );
    }
+
+
    
 }
 
@@ -29,6 +31,7 @@ class User{
   final bool isAdmin;
   final Shipping shipping;
   final String token;
+  final String id;
 
 
   User({
@@ -36,12 +39,14 @@ class User{
     required this.fullname,
     required this.isAdmin,
     required this.shipping,
-    required this.token
+    required this.token,
+    required this.id
   });
 
   factory User.fromJson(Map<String, dynamic> json){
     return User(
      email: json['email'],
+      id: json['id'],
       fullname: json['fullname'],
       token: json['token'],
       isAdmin: json['isAdmin'],

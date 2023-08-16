@@ -54,7 +54,21 @@ class AuthProvider extends StateNotifier<CommonState>{
   }
 
 
-
+   Future<void> userUpdate({
+    required  Map<String, dynamic> shippingAddress,
+    required String token
+  }) async {
+     state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
+     final response = await AuthService.userUpdate(shippingAddress: shippingAddress, token: token);
+     response.fold(
+             (l) {
+           state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
+         },
+             (r) {
+           state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: true, user: r,);
+         }
+     );
+  }
 
 
   void userLogOut(){
