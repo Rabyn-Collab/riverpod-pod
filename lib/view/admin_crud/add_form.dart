@@ -61,6 +61,8 @@ class _AddPageState extends ConsumerState<AddPage> {
         Get.back();
       }
     });
+
+
     final crud = ref.watch(crudProvider);
     final image = ref.watch(imageProvider);
     final auth = ref.watch(authProvider);

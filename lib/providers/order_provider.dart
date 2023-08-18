@@ -15,7 +15,7 @@ class OrderProvider extends StateNotifier<CommonState>{
 
 
 
-  Future<void> ddOrder ({
+  Future<void> addOrder ({
     required List<CartItem> orderItems,
     required int totalPrice,
     required String token

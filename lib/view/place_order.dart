@@ -26,6 +26,7 @@ class PlaceOrder extends ConsumerWidget{
       }
     });
     final authData = ref.watch(authProvider);
+    final order = ref.watch(orderProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('Order Detail'),
@@ -100,7 +101,9 @@ class PlaceOrder extends ConsumerWidget{
                    ],
                  ),
                ),
-                  ElevatedButton(onPressed: (){}, child: Text('Place An Order'))
+                  ElevatedButton(onPressed: order.isLoad ? null : (){
+                    ref.read(orderProvider.notifier).addOrder(orderItems: carts, totalPrice: total, token: authData.user!.token);
+                  }, child: order.isLoad ? Center(child: CircularProgressIndicator()): Text('Place An Order'))
                 ],
               ),
             )

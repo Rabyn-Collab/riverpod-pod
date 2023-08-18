@@ -163,4 +163,40 @@ class ProductService {
 
 
 
+
+  static Future<Either<String, bool>>  addRating ({
+   required String username,
+   required String comment,
+   required int rating,
+  required String  user,
+    required String productId,
+    required String token
+  })async {
+    try {
+
+      final response = await dio.patch('${Api.baseUrl}/api/add/review/$productId',
+          data: {
+            'username': username,
+            'comment': comment,
+            'rating': rating,
+            'user': user
+          },
+          options: Options(
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                HttpHeaders.authorizationHeader: token,
+              }
+          ));
+      return Right(true);
+
+
+    } on DioException catch (err) {
+      return Left(DioExceptionError.fromDioError(err));
+    }
+  }
+
+
+
+
 }

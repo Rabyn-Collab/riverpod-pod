@@ -1,16 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:pod/api.dart';
 import 'package:pod/model/product.dart';
 import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/cart_provider.dart';
+import 'package:pod/view/more_detail.dart';
 
 
-class DetailPage extends StatelessWidget {
+
+
+class DetailPage extends StatelessWidget{
   final Product product;
   const DetailPage({super.key, required this.product});
-
 
 
   @override
@@ -31,7 +34,7 @@ class DetailPage extends StatelessWidget {
                          height: 270,
                          width: double.infinity,
                          child: Hero(
-                             tag: product.id,
+                             tag:product.id,
                              child: CachedNetworkImage(imageUrl: '${Api.baseUrl}${product.product_image}'))),
                      Container(
                        padding: EdgeInsets.all(20),
@@ -40,12 +43,18 @@ class DetailPage extends StatelessWidget {
                        children: [
                          Text(product.product_name, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                          SizedBox(height: 20,),
-                         Text(product.product_detail, maxLines: 10,style: TextStyle(color: Colors.amberAccent),)
+                         Text(product.product_detail, maxLines: 10,style: TextStyle(color: Colors.amberAccent),),
+                         Align(
+                             alignment: Alignment.centerRight,
+                             child: TextButton(onPressed: (){
+                               Get.to(() => MoreDetail(product: product,), transition: Transition.leftToRight);
+                             }, child: Text('Click here for more')))
                        ],
                      )),
 
                    ],
                  )),
+
               Consumer(
                 builder: (context, ref, child){
                   final auth = ref.watch(authProvider);

@@ -89,5 +89,27 @@ class ProductProvider extends StateNotifier<CommonState>{
   }
 
 
+    Future<void>  addRating ({
+    required String username,
+    required String comment,
+    required int rating,
+    required String  user,
+    required String productId,
+    required String token
+  })async {
+      state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
+      final response = await ProductService.addRating(
+          username: username, comment: comment, rating: rating, user: user, productId: productId, token: token);
+      response.fold(
+              (l) {
+            state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
+          },
+              (r) {
+            state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r,);
+          }
+      );
+
+  }
+
 
 }

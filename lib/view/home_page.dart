@@ -1,5 +1,9 @@
+import 'dart:math';
+
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:pod/api.dart';
@@ -9,6 +13,7 @@ import 'package:pod/providers/cart_provider.dart';
 import 'package:pod/service/product_service.dart';
 import 'package:pod/view/cart_page.dart';
 import 'package:pod/view/detail_page.dart';
+import 'package:pod/view/history_page.dart';
 import 'package:pod/view/product_list.dart';
 
 
@@ -58,6 +63,16 @@ class HomePage extends StatelessWidget {
                   ),
                       )),
 
+                  if(!authData.user!.isAdmin) ListTile(
+                    onTap: () {
+                      Get.back();
+                      Get.to(() => HistoryPage(), transition: Transition.leftToRight);
+
+                    },
+                    leading: Icon(Icons.history, color: Colors.white,),
+                    title: Text('Order History'),
+                  ),
+
                   if(authData.user!.isAdmin) ListTile(
                     onTap: () {
                       Get.back();
@@ -90,7 +105,8 @@ class HomePage extends StatelessWidget {
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 2,
                             mainAxisSpacing: 10,
-                            crossAxisSpacing: 10
+                            crossAxisSpacing: 10,
+                            childAspectRatio: 2/3
                           ),
                           itemBuilder: (context, index){
                             final product = data[index];
@@ -98,24 +114,57 @@ class HomePage extends StatelessWidget {
                               onTap: (){
                                 Get.to(() => DetailPage(product: product));
                               },
-                              child: GridTile(
-                                  child: Hero(
-                                    tag: product.id,
-                                    child: CachedNetworkImage(
-                                      fit: BoxFit.fill,
-                                      imageUrl:  '${Api.baseUrl}${product.product_image}'),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: GridTile(
+                                        child: Hero(
+                                          tag: product.id,
+                                          child: CachedNetworkImage(
+                                            fit: BoxFit.fill,
+                                            imageUrl:  '${Api.baseUrl}${product.product_image}'),
+                                        ),
+                                      footer: Container(
+                                        color: Colors.black.withOpacity(0.7),
+                                        height: 40,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(child: Text(product.product_name)),
+                                            Text('Rs.${product.product_price}')
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                footer: Container(
-                                  color: Colors.black.withOpacity(0.7),
-                                  height: 40,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(child: Text(product.product_name)),
-                                      Text('Rs.${product.product_price}')
-                                    ],
-                                  ),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    child: Row(
+                                      children: [
+                                        Text('Rating'),
+                                        Spacer(),
+                                        Expanded(
+                                          flex: 2,
+                                          child: RatingBar.builder(
+                                           initialRating: product.rating.toDouble(),
+                                          itemSize: 15,
+                                           direction: Axis.horizontal,
+                                           allowHalfRating: true,
+                                            itemCount: product.rating,
+                                            itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                                            itemBuilder: (context, _) => Icon(
+                                           Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                           onRatingUpdate: (rating) {
+                                             print(rating);
+                                             },
+                                            ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
                               ),
                             );
                           }
