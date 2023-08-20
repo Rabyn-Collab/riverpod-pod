@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ final cartBox = await Hive.openBox<CartItem>('carts');
 final user = Hive.box<String?>('user');
 final userData  = user.get('userInfo');
 
+void m (){
+
+}
 
   runApp(
       ProviderScope(
