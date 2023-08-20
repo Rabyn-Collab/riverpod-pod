@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
-import 'package:pod/main.dart';
-import 'package:pod/model/cart_item.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pod/model/common_state.dart';
 import 'package:pod/service/auth_service.dart';
 
@@ -9,7 +7,7 @@ import 'package:pod/service/auth_service.dart';
 
 
 final authProvider = StateNotifierProvider<AuthProvider, CommonState>((ref) => AuthProvider(CommonState(
-    errText: '', isLoad: false, isSuccess: false, isError: false, user: ref.watch(box))));
+    errText: '', isLoad: false, isSuccess: false, isError: false)));
 
 
 class AuthProvider extends StateNotifier<CommonState>{
@@ -27,7 +25,7 @@ class AuthProvider extends StateNotifier<CommonState>{
              state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
              },
              (r) {
-              state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: true,user: r);
+              state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r);
              }
      );
 
@@ -36,13 +34,14 @@ class AuthProvider extends StateNotifier<CommonState>{
 
 
 
-   Future<void> userSignUp({
-    required String email,
-    required String password,
-    required String fullname
-  }) async {
+   Future<void> serSignUp({
+     required String email,
+     required String password,
+     required String username,
+     required XFile image
+   }) async {
     state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
-    final response = await AuthService.userSignUp(email: email, password: password, fullname: fullname);
+    final response = await AuthService.userSignUp(email: email, password: password, username: username, image: image);
     response.fold(
             (l) {
           state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
@@ -54,27 +53,10 @@ class AuthProvider extends StateNotifier<CommonState>{
   }
 
 
-   Future<void> userUpdate({
-    required  Map<String, dynamic> shippingAddress,
-    required String token
-  }) async {
-     state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
-     final response = await AuthService.userUpdate(shippingAddress: shippingAddress, token: token);
-     response.fold(
-             (l) {
-           state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
-         },
-             (r) {
-           state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: true, user: r,);
-         }
-     );
-  }
 
 
   void userLogOut(){
-     Hive.box<String?>('user').clear();
 
-     state = state.copyWith(user: null);
   }
 
 }

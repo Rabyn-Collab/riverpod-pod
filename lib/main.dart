@@ -1,38 +1,26 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:pod/model/cart_item.dart';
-import 'package:pod/model/user.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:pod/view/auth/auth_page.dart';
 import 'package:pod/view/status_page.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-final box = Provider<User?>((ref) => null);
-final boxA = Provider<List<CartItem>>((ref) => []);
 
 void main () async{
   WidgetsFlutterBinding.ensureInitialized();
   await Future.delayed(Duration(milliseconds: 500));
-await Hive.initFlutter();
-Hive.registerAdapter(CartItemAdapter());
 
-await Hive.openBox<String?>('user');
-final cartBox = await Hive.openBox<CartItem>('carts');
-final user = Hive.box<String?>('user');
-final userData  = user.get('userInfo');
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-void m (){
-
-}
 
   runApp(
       ProviderScope(
-        overrides: [
-          box.overrideWithValue(userData == null ? null : User.fromJson(jsonDecode(userData))),
-          boxA.overrideWithValue(cartBox.values.toList())
-        ],
+
           child: Home()
       ));
 
@@ -52,7 +40,7 @@ class Home extends StatelessWidget {
         ).copyWith(
           textTheme: Typography().white.apply(fontFamily: 'RaleWay'),
         ),
-        home: StatusPage(),
+        home: AuthPage(),
     );
   }
 }

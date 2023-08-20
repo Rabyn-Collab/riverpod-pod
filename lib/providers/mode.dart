@@ -4,6 +4,18 @@ import 'package:image_picker/image_picker.dart';
 
 
 
+final loginProvider = StateNotifierProvider.autoDispose<LoginProvider, bool>((ref) => LoginProvider(true));
+
+
+class LoginProvider extends StateNotifier<bool>{
+  LoginProvider(super.state);
+
+  void changeState(){
+    state = !state;
+  }
+
+
+}
 
 
 final modeProvider = StateNotifierProvider.autoDispose<ModeProvider, AutovalidateMode>((ref) => ModeProvider(AutovalidateMode.disabled));

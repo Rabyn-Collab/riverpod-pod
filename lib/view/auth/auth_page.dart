@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -8,14 +10,14 @@ import 'package:pod/providers/auth_provider.dart';
 import 'package:pod/providers/mode.dart';
 
 
-class SignUpPage extends ConsumerStatefulWidget {
+class AuthPage extends ConsumerStatefulWidget {
 
 
   @override
-  ConsumerState<SignUpPage> createState() => _SignUpPageState();
+  ConsumerState<AuthPage> createState() => _AuthPageState();
 }
 
-class _SignUpPageState extends ConsumerState<SignUpPage> {
+class _AuthPageState extends ConsumerState<AuthPage> {
   final mailController = TextEditingController();
 
   final nameController = TextEditingController();
@@ -35,9 +37,11 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
       }
     });
     final auth = ref.watch(authProvider);
+    final isLogin = ref.watch(loginProvider);
+    final image = ref.watch(imageProvider);
     return Scaffold(
         appBar: AppBar(
-          title: Text('SignUp Page'),
+          title: Text(isLogin ? 'Login Page' : 'SignUp Page'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(15),
@@ -51,13 +55,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const SizedBox(height: 50,),
-                      TextFormField(
+                    if(!isLogin)  TextFormField(
                         controller: nameController,
                         textInputAction: TextInputAction.next,
                         style: TextStyle(color: Colours.whiteColor),
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'please provide fullname';
+                            return 'please provide username';
                           } else if (val.length < 5) {
                             return 'must be greater than 5';
                           } else if (val.length > 30) {
@@ -66,7 +70,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            hintText: 'Full Name',
+                            hintText: 'User Name',
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 15),
                             prefixIcon: Icon(Icons.lock),
@@ -120,17 +124,26 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         ),
                       ),
                       Sizes.gapH20,
+                   if(!isLogin)   Sizes.gapH20,
+                      if(!isLogin)    InkWell(
+                        onTap: (){
+                          ref.read(imageProvider.notifier).pickAnImage(false);
+                        },
+                        child: Container(
+                          height: 150,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white)
+                          ),
+                          child: image == null ?  Center(child: Text('Please select an image')) : Image.file(File(image.path)),
+                        ),
+                      ),
                       Sizes.gapH20,
                       ElevatedButton(
                           onPressed:auth.isLoad ? null: () {
                             FocusScope.of(context).unfocus();
                             _form.currentState!.save();
                             if (_form.currentState!.validate()) {
-                              ref.read(authProvider.notifier).userSignUp(
-                                  email: mailController.text.trim(),
-                                  password: passController.text.trim(),
-                                  fullname: nameController.text.trim()
-                              );
+
                             } else {
                               ref.read(modeProvider.notifier).changeMode();
 
@@ -141,10 +154,10 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Already have an Account ?'),
+                          Text(isLogin ? 'Don\'t have an account': 'Already have an Account ?'),
                           TextButton(onPressed: (){
-                            Get.back();
-                          }, child: Text('Login'))
+                            ref.read(loginProvider.notifier).changeState();
+                          }, child: Text(isLogin ? 'SignUp': 'Login'))
                         ],
                       )
                     ],
