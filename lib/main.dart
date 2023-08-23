@@ -40,7 +40,33 @@ class Home extends StatelessWidget {
         ).copyWith(
           textTheme: Typography().white.apply(fontFamily: 'RaleWay'),
         ),
-        home: AuthPage(),
+        home: CounterStream(),
     );
+  }
+}
+
+
+class CounterStream extends StatelessWidget {
+   CounterStream({super.key});
+
+  int number = 0;
+
+  StreamController  numberStream = StreamController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: StreamBuilder(
+          initialData: number,
+          stream: numberStream.stream,
+          builder: (context, snapshot) {
+              return  Center(child: Text(snapshot.data.toString(), style: TextStyle(fontSize: 50),));
+          }
+        ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        numberStream.sink.add(number++);
+      }, child: Icon(Icons.add),),
+    );
+    
+    
   }
 }
