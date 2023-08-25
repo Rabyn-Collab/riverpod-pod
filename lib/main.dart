@@ -40,7 +40,7 @@ class Home extends StatelessWidget {
         ).copyWith(
           textTheme: Typography().white.apply(fontFamily: 'RaleWay'),
         ),
-        home: CounterStream(),
+        home: StatusPage(),
     );
   }
 }

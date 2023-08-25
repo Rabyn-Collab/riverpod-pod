@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pod/model/common_state.dart';
@@ -34,7 +35,7 @@ class AuthProvider extends StateNotifier<CommonState>{
 
 
 
-   Future<void> serSignUp({
+   Future<void> userSignUp({
      required String email,
      required String password,
      required String username,
@@ -55,8 +56,18 @@ class AuthProvider extends StateNotifier<CommonState>{
 
 
 
-  void userLogOut(){
-
+   Future<void> userLogOut() async {
+     state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
+     final response = await AuthService.userLogOut();
+     response.fold(
+             (l) {
+           state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);
+         },
+             (r) {
+           state = state.copyWith(errText: '', isError: false, isLoad: false,isSuccess: r,);
+         }
+     );
   }
+
 
 }

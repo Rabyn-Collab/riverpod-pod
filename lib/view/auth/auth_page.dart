@@ -28,16 +28,18 @@ class _AuthPageState extends ConsumerState<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isLogin = ref.watch(loginProvider);
     ref.listen(authProvider, (previous, next) {
+
       if(next.isError){
         CommonSnack.errrorSnack(context: context,msg:  next.errText);
       }else if(next.isSuccess){
-        CommonSnack.successSnack(context: context,msg:  'successfully register');
+        CommonSnack.successSnack(context: context,msg: isLogin ? 'successfully login':  'successfully register');
         Get.back();
       }
     });
     final auth = ref.watch(authProvider);
-    final isLogin = ref.watch(loginProvider);
+
     final image = ref.watch(imageProvider);
     return Scaffold(
         appBar: AppBar(
@@ -51,8 +53,7 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                 return Form(
                   autovalidateMode: mode,
                   key: _form,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: ListView(
                     children: [
                       const SizedBox(height: 50,),
                     if(!isLogin)  TextFormField(
@@ -143,12 +144,30 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                             FocusScope.of(context).unfocus();
                             _form.currentState!.save();
                             if (_form.currentState!.validate()) {
+                              if(isLogin){
+                                   ref.read(authProvider.notifier).userLogin(
+                                       email: mailController.text.trim(),
+                                       password: passController.text.trim()
+                                   );
+                              }else{
+                                if(image == null){
+                                  CommonSnack.errrorSnack(context: context, msg: 'please select an image');
+                                }else{
+                                  ref.read(authProvider.notifier).userSignUp(
+                                      email: mailController.text.trim(),
+                                      password: passController.text.trim(),
+                                      username: nameController.text.trim(),
+                                      image: image
+                                  );
+                                }
+
+                              }
 
                             } else {
                               ref.read(modeProvider.notifier).changeMode();
 
                             }
-                          }, child:  auth.isLoad ? Center(child: CircularProgressIndicator()) :Text('SignUp')
+                          }, child:  auth.isLoad ? Center(child: CircularProgressIndicator()) :Text(isLogin ? 'Login': 'SignUp')
                       ),
                       Sizes.gapH10,
                       Row(
