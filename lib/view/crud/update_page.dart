@@ -128,13 +128,18 @@ class _UpdatePageState extends ConsumerState<UpdatePage> {
                             if (_form.currentState!.validate()) {
 
                               if(image == null){
-                                CommonSnack.errrorSnack(context: context, msg: 'please select an image');
-                              }else{
-                                ref.read(postProvider.notifier).addPost(
+                                ref.read(postProvider.notifier).updatePost(
                                     detail: detailController.text.trim(),
                                     title: titleController.text.trim(),
-                                    userId: FirebaseAuth.instance.currentUser!.uid,
-                                    image: image
+                                     postId: widget.post.postId,
+                                );
+                              }else{
+                                ref.read(postProvider.notifier).updatePost(
+                                  detail: detailController.text.trim(),
+                                  title: titleController.text.trim(),
+                                  postId: widget.post.postId,
+                                  image: image,
+                                  oldImageId: widget.post.imageId
                                 );
                               }
 

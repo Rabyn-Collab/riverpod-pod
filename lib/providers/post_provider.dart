@@ -43,7 +43,7 @@ class PostProvider extends StateNotifier<CommonState>{
     String? oldImageId,
   }) async{
     state = state.copyWith(errText: '', isError: false, isLoad: true,isSuccess: false);
-    final response = await PostService.updatePost(detail: detail, title: title, postId: postId);
+    final response = await PostService.updatePost(detail: detail, title: title, postId: postId,oldImageId: oldImageId, image: image);
     response.fold(
             (l) {
           state=  state.copyWith(errText: l, isError: true, isLoad: false,isSuccess: false);

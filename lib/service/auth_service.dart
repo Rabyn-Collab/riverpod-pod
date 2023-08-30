@@ -16,8 +16,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 
 
-final userStream = StreamProvider((ref) => FirebaseAuth.instance.authStateChanges());
-final usersStream = StreamProvider((ref) => FirebaseChatCore.instance.users());
+final userStream = StreamProvider.autoDispose((ref) => FirebaseAuth.instance.authStateChanges());
+final usersStream = StreamProvider.autoDispose((ref) => FirebaseChatCore.instance.users());
 
 final singleUserStream = StreamProvider.family((ref, String userId) => AuthService.userStream(userId));
 

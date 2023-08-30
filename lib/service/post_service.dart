@@ -12,11 +12,34 @@ import 'package:pod/model/post.dart';
 
 
 final postsStream = StreamProvider((ref) => PostService.postsStream());
+final postStream=  StreamProvider.family((ref, String postId) =>PostService.postStream(postId));
 class PostService{
 
 
 
   static final postDb = FirebaseFirestore.instance.collection('posts');
+
+
+
+  static Stream<Post> postStream (String postId){
+    return postDb.doc(postId).snapshots().map((e) {
+      final json = e.data() as Map<String, dynamic>;
+      return Post(
+          detail: json['detail'],
+          imageId: json['imageId'],
+          imageUrl: json['imageUrl'],
+          postId: e.id,
+          title: json['title'],
+          userId: json['userId'],
+          comments: (json['comments'] as List).map((e) => Comment.fromJson(e)).toList(),
+          like: Like.fromJson(json['like'])
+      );
+    }
+    );
+  }
+
+
+
 
   static Stream<List<Post>> postsStream (){
 
@@ -134,7 +157,7 @@ class PostService{
     try{
 
       await postDb.doc(postId).update({
-        'comments': [FieldValue.arrayUnion([comment.toMap()])],
+        'comments': FieldValue.arrayUnion([comment.toMap()]),
       });
       return Right(true);
     }on FirebaseException catch (err){
@@ -154,11 +177,12 @@ class PostService{
       await postDb.doc(postId).update({
         'like': {
           'likes': oldLike + 1,
-          'users': [FieldValue.arrayUnion([username])]
+          'users': FieldValue.arrayUnion([username])
         }
       });
       return Right(true);
     }on FirebaseException catch (err){
+      print(err);
       return Left(err.message.toString());
     }
 
