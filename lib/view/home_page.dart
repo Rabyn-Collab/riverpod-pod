@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -13,13 +14,21 @@ import 'package:pod/view/crud/update_page.dart';
 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:pod/view/detail_page.dart';
+import 'package:pod/view/user_detail.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
  late types.User user;
+
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -78,15 +87,20 @@ class HomePage extends StatelessWidget {
                           itemCount: data.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index){
-                            return Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: NetworkImage(data[index].imageUrl!),
-                                ),
-                                Sizes.gapH10,
-                                Text(data[index].firstName!),
-                              ],
+                            return InkWell(
+                              onTap: (){
+                                Get.to(() => UserDetail(user: data[index]));
+                              },
+                              child: Column(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 40,
+                                    backgroundImage: NetworkImage(data[index].imageUrl!),
+                                  ),
+                                  Sizes.gapH10,
+                                  Text(data[index].firstName!),
+                                ],
+                              ),
                             );
                             }
                         );

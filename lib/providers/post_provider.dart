@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pod/model/common_state.dart';
 import 'package:pod/model/post.dart';
-import 'package:pod/service/auth_service.dart';
 import 'package:pod/service/post_service.dart';
 
 
